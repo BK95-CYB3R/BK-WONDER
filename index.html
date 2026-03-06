@@ -145,6 +145,17 @@
     }
 
     function updateStruk() {
+        // Update Waktu Otomatis Jakarta (WIB)
+        const now = new Date();
+        const optionsDate = { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' };
+        const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Asia/Jakarta' };
+        
+        const dateStr = now.toLocaleDateString('id-ID', optionsDate).replace(/\./g, '');
+        const timeStr = now.toLocaleTimeString('id-ID', optionsTime).replace(/\./g, ':');
+        
+        document.getElementById('displayTime').innerText = `${dateStr} • ${timeStr} WIB`;
+
+        // Update Data Lainnya
         const nom = parseInt(document.getElementById('inNominal').value) || 0;
         document.getElementById('displayBankLabel').innerText = document.getElementById('selBank').value;
         document.getElementById('displayNominalMain').innerText = formatRupiah(nom);
@@ -156,11 +167,13 @@
         document.getElementById('displayRekPengirim').innerText = "* * * * * " + document.getElementById('inRekPengirim4').value;
         document.getElementById('displayCatatan').innerText = document.getElementById('inCatatan').value || "-";
         
-        document.getElementById('displayRef').innerText = "Ref ID: 20260306" + generateRandom(8);
-        document.getElementById('displayBiz').innerText = "20260306" + generateRandom(12);
+        // Generate Ref ID & BIZ ID Berdasarkan Tanggal Hari Ini
+        const datePrefix = now.getFullYear().toString() + (now.getMonth() + 1).toString().padStart(2, '0') + now.getDate().toString().padStart(2, '0');
+        document.getElementById('displayRef').innerText = "Ref ID: " + datePrefix + generateRandom(8);
+        document.getElementById('displayBiz').innerText = datePrefix + generateRandom(12);
     }
     
-    window.onload = () => { randomizePenerima(); };
+    window.onload = () => { updateStruk(); randomizePenerima(); };
 
     function saveToGallery() {
         html2canvas(document.getElementById('capture-area'), { scale: 3, useCORS: true, backgroundColor: "#ffffff" }).then(c => {
@@ -170,3 +183,4 @@
 </script>
 </body>
 </html>
+
